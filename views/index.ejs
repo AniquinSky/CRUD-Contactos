@@ -120,18 +120,109 @@
       margin-bottom: 1rem;
       color: #dddfeb;
     }
+    
+    /* Nuevos estilos para la búsqueda */
+    .search-container {
+      background-color: #f8f9fc;
+      padding: 1.5rem;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+    
+    .search-title {
+      color: var(--primary-color);
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+    
+    .search-input-group {
+      max-width: 400px;
+    }
+    
+    .search-result-card {
+      border-left: 4px solid var(--primary-color);
+      margin-top: 1.5rem;
+    }
+    
+    .search-result-title {
+      color: var(--primary-color);
+      font-weight: 600;
+    }
   </style>
 </head>
 <body>
   <div class="container py-5">
+    <!-- Sección de Búsqueda Individual -->
+    <div class="search-container">
+      <h4 class="search-title"><i class="fas fa-search me-2"></i>Buscar Contacto Individual</h4>
+      <div class="d-flex align-items-center">
+        <form action="/buscar" method="POST" class="d-flex w-100">
+          <div class="input-group search-input-group">
+            <input type="number" 
+                   name="id" 
+                   class="form-control" 
+                   placeholder="Ingrese ID del contacto"
+                   min="1"
+                   required>
+            <button class="btn btn-primary" type="submit">
+              <i class="fas fa-search me-1"></i> Buscar
+            </button>
+          </div>
+        </form>
+        <a href="/" class="btn btn-outline-secondary ms-3">
+          <i class="fas fa-sync-alt me-1"></i> Mostrar Todos
+        </a>
+      </div>
+      
+      <% if (typeof contactoBuscado !== 'undefined') { %>
+        <% if (contactoBuscado) { %>
+          <div class="card search-result-card mt-3">
+            <div class="card-body">
+              <h5 class="search-result-title mb-3">Resultado de la búsqueda</h5>
+              <div class="row">
+                <div class="col-md-6">
+                  <p><strong>ID:</strong> <span class="badge-id"><%= contactoBuscado.id %></span></p>
+                  <p><strong>Nombre:</strong> <%= contactoBuscado.nombre %></p>
+                  <p><strong>Domicilio:</strong> <%= contactoBuscado.domicilio %></p>
+                </div>
+                <div class="col-md-6">
+                  <p><strong>Correo:</strong> <a href="mailto:<%= contactoBuscado.correo %>"><%= contactoBuscado.correo %></a></p>
+                  <p><strong>Teléfono:</strong> <a href="tel:<%= contactoBuscado.telefono %>"><%= contactoBuscado.telefono %></a></p>
+                </div>
+              </div>
+              <div class="d-flex justify-content-end gap-2 mt-3">
+                <a href="/edit/<%= contactoBuscado.id %>" class="btn btn-action btn-edit">
+                  <i class="fas fa-edit me-1"></i> Editar
+                </a>
+                <form action="/delete/<%= contactoBuscado.id %>" method="POST" class="d-inline">
+                  <button type="submit" class="btn btn-action btn-delete" 
+                          onclick="return confirm('¿Estás seguro de eliminar este contacto?');">
+                    <i class="fas fa-trash-alt me-1"></i> Eliminar
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% } else if (contactoBuscado === null) { %>
+          <div class="alert alert-warning mt-3">
+            <i class="fas fa-exclamation-triangle me-2"></i> No se encontró ningún contacto con el ID proporcionado.
+          </div>
+        <% } %>
+      <% } %>
+    </div>
+
+    <!-- Lista de Todos los Contactos -->
     <div class="row justify-content-center">
       <div class="col-lg-12">
         <div class="card">
           <div class="card-header d-flex justify-content-between align-items-center">
             <h3 class="m-0"><i class="fas fa-address-book me-2"></i>Lista de Contactos</h3>
-            <a href="/add" class="btn btn-add text-white">
-              <i class="fas fa-plus me-2"></i>Agregar Contacto
-            </a>
+            <div>
+              <a href="/add" class="btn btn-add text-white">
+                <i class="fas fa-plus me-2"></i>Agregar Contacto
+              </a>
+            </div>
           </div>
           
           <div class="table-responsive">
